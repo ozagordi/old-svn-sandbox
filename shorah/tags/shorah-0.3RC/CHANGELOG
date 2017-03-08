@@ -1,0 +1,36 @@
+New in version 0.3
+---------------------
+
++ dpm_sampler is now C++! Thanks to the structures
+  defined in C++ libraries (map and multimap), we
+  are able to run requiring much less memory
+
++ Parallelization! dec.py now calls diri_sampler using
+  a pool of independent workers, exploiting all the
+  available compuational power, same for s2f.py
+
++ The sampling has been improved, now we can have a more
+  reliable estimate of the quality of our local
+  haplotype reconstruction
+
++ The output of diri_sampler is now better organized
+
++ all the python programs now use the logging module to
+  write logs of their operations
+
++ plot_sampling.py and plot_stat.py can be used to produce
+  graph showing the behaviour of the Gibbs sampling
+
+
+New in version 0.2
+---------------------
+
++ New method to assign the reads after the sampling
+
++ The alignment is now provided by a separate
+  program (step2far.py), so that the user can input
+  his/her own alignment and install EMBOSS only if
+  really necessary
+
++ Fixed numerical bugs when dealing with very high or
+  very low probabilities

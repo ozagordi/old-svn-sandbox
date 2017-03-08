@@ -1,0 +1,56 @@
+########################################
+# Program: needle
+# Rundate: Thu 11 Mar 2010 16:12:27
+# Commandline: needle
+#    [-asequence] asis:CCTCAGATCACTCTTTGGCAACGACCCATCGTCTCAATAAAGATAGGGGGGCAAATAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGAAATGAATTTGCCAGGGAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTGTCAAAGTAAGACAATATGAGCAGGTACCCATAGAAATCTGTGGGCATAAAGCTATAGGTACAGTATTAATAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTT
+#    [-bsequence] /home/ozagordi/References/HIV-pol-PR.fas
+#    -auto
+# Align_format: srspair
+# Report_file: asis.needle
+########################################
+
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: asis
+# 2: HIV_pol_gene_protease
+# Matrix: EDNAFULL
+# Gap_penalty: 10.0
+# Extend_penalty: 0.5
+#
+# Length: 297
+# Identity:     284/297 (95.6%)
+# Similarity:   284/297 (95.6%)
+# Gaps:           0/297 ( 0.0%)
+# Score: 1368.0
+# 
+#
+#=======================================
+
+asis               1 CCTCAGATCACTCTTTGGCAACGACCCATCGTCTCAATAAAGATAGGGGG     50
+                     ||||||.||||||||||||||||||||.|||||.||||||||||||||||
+HIV_pol_gene_      1 CCTCAGGTCACTCTTTGGCAACGACCCCTCGTCACAATAAAGATAGGGGG     50
+
+asis              51 GCAAATAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAG    100
+                     ||||.|||||||||||||||||||||||||||||||||||||||||||||
+HIV_pol_gene_     51 GCAACTAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAG    100
+
+asis             101 AAGAAATGAATTTGCCAGGGAGATGGAAACCAAAAATGATAGGGGGAATT    150
+                     |||||||||.|||||||||.||||||||||||||||||||||||||||||
+HIV_pol_gene_    101 AAGAAATGAGTTTGCCAGGAAGATGGAAACCAAAAATGATAGGGGGAATT    150
+
+asis             151 GGAGGTTTTGTCAAAGTAAGACAATATGAGCAGGTACCCATAGAAATCTG    200
+                     |||||||||.|||||||||||||.|||||.|||.|||.||||||||||||
+HIV_pol_gene_    151 GGAGGTTTTATCAAAGTAAGACAGTATGATCAGATACTCATAGAAATCTG    200
+
+asis             201 TGGGCATAAAGCTATAGGTACAGTATTAATAGGACCTACACCTGTCAACA    250
+                     |||.||||||||||||||||||||||||.|||||||||||||||||||||
+HIV_pol_gene_    201 TGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACA    250
+
+asis             251 TAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTT    297
+                     |||||||||||||||||||||||||||||||||||||||||||||||
+HIV_pol_gene_    251 TAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTT    297
+
+
+#---------------------------------------
+#---------------------------------------

@@ -1,0 +1,29 @@
+DECONTAMINATE.PY
+filtered reads are aligned to the consensus sequence and the recognized contaminants and
+divide in files closer_to_ref, closer_to_cont1
+
+
+FILTER_BY_QUAL.PY
+All 16 read files were filtered according to their quality scores(fna and qual files are in the 
+data directory): reads in which the minimum phred score is lower than 15 were excluded.
+
+
+DEC_START.PY
+USed also to specify the window range.
+
+
+PLOT_COV.PY
+Simple plot of the coverage from the .far file.
+
+
+READS_ANALIZE.PY
+After the diri_sampler run, the corrected reads were analyzed with the program reads_analyze.py. 
+It takes corrected reads and original reads as input parameter.
+It considers all reads with a quality exceeding a given threshold (default: 0.999), that do not 
+contain gaps1 and have less than 5 N's. Haplotypes differing at most because of missing data are 
+considered together. A plot is produced of frequencies, showing at the same time the equivalent 
+frequency of 510, 20, 50 reads. 
+The last step is to check the support these haplotypes find in the original reads.
+
+ALIGN_ALL.PY
+Uses Novoalign to align read to 10 different haplotypes.

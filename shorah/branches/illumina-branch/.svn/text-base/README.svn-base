@@ -1,0 +1,206 @@
+ShoRAH consists of several programs:
+
+dec.py       - local error correction based on diri_sampler
+diri_sampler - Gibbs sampling for Dirichlet process mixture
+contain.cc   - eliminate redundant reads
+mm.py        - maximum matching haplotype construction
+freqEst.cc   - EM algorithm for haplotype frequency
+fas2read.pl  - translates between two formats for read data files
+
+Added in version 0.2
+step2far.py  - aligns reads and writes the far file (input for dec.py)
+WARNING: quadratic in n
+
+Copyright 2007, 2008
+Niko Beerenwinkel,
+Nicholas Eriksson,
+Lukas Geyrhofer,
+Osvaldo Zagordi,
+ETH Zurich
+under GPL. See file LICENSE for details.
+The program also includes other software written by third parties.
+This has been distributed according to the licenses provided by the
+respective authors.
+
+
+GENERAL USAGE:
+--------------------------------------------------
+
+Install:
+	type 'make' to build the C and C++ programs, then run. See INSTALL
+	for additional information
+
+Run:
+	The whole process can be run one step after the other, or
+	one can invoke shorah.py, that runs the whole process from read
+	file to frequency estimation. The input must be a far file (fasta
+	aligned reads), a multiple alignment of the reads in fasta format.
+	The user can use the program step2far to produce it, or copy its
+	alignment to a file with the .far extension.
+
+
+
+STEP2FAR.PY
+--------------------------------------------------
+Command line options
+	-h, --help		show help message and exit
+  	-f INPUT, --readfile=INPUT
+  	-r REF, --ref=REF	file with reference genome in fasta format, one sequence only
+  	-o O, --output=O	output suffix must be '.far' or none for stdout
+  	-t THRESHOLD, --threshold=THRESHOLD <default=0.2>
+       			if errors represent more than 20%, read is discarded
+  	-k, --keep_files	don't delete temporary files <default=off>
+
+Output:
+	The program step2far.py takes as input the file of reads (either in fas
+	or sff format) and the reference genome. It produces a set of pairwise
+	alignments, then merge them to obtain a multiple one in a file with
+	far extension (file_name.far). This is the input of the subsequent analysis
+	performed with dec.py.
+
+Examples:
+	Two sample have been inserted to test.
+	
+	The first consists of six very short reads:
+	reads file: very_small_test.fas
+	reference genome: very_small_ref.fas
+	
+	We create the far file from the fasta file and the reference
+	[user@host]$ step2far.py -f very_small_test.fas -r very_small_ref.fas -o very_small_test.far
+
+	The second is a simulated dataset from HIV genome
+	reads file: test1.fas
+	reference genome: HIV.fas
+
+	[user@host]$ step2far.py -f test1.fas -r HIV.fas -o test1.far
+
+	
+
+SHORAH.PY:
+--------------------------------------------------
+Command line options (relevant to dec.py and shorah.py):
+	The following options regarding the error correction step apply to
+	the program shorah.py. They can be passed to dec.py as well.
+
+	-h, --help            shows the options
+		
+	-f F, --readsfile=F   file with reads <sff or fas>
+		input file with reads, if in fasta file the
+		reads should all have different headers
+
+	-j J, --iterations=J  iterations in dpm sampling <1000>
+
+	-a A, --alpha=A       alpha in dpm sampling <0.01>
+		these controls the probability to assign reads to new
+		clusters (and then the total number of these), can be
+		changed by orders of magnitude
+		
+	-w W, --windowsize=W  window size in <99>
+		the window size should be a multiple of the window shifts
+
+	-s S, --winshifts=S   number of window shifts <3>
+	      	every base is considered up to S times by shifting the windows
+
+
+Examples:
+	How to run shorah on the example files described above.
+	
+	The file with a few reads
+	[user@host]$ shorah.py -f very_small_test.far -w 3 -j 20 -a 0.001
+	
+	The second example from HIV genome
+	[user@host]$ shorah.py -f test1.far -w 99 -j 1000 -a 0.001
+
+	
+Output:
+	The very end of the program is a set of haplotypes with relative frequencies at
+	sample_cor.popl. In order to sort them and see the most relevant ones one can use
+	the commands grep and sort as follows
+	[user@host]$ grep HAP sample_cor.popl | sort -g -k 4
+
+	It is important to analyse the output files of dec.py (see below).
+
+
+The file shorah.py runs all the following steps:
+
+## 1. error correction
+## output: sample_cor.fas (corrected fasta reads)
+dec.py -f sample.sff (or sample.fas) +additional_options
+
+## 2. translate to read format
+## output: sample_cor.read
+fas2read.pl -f sample_cor.fas
+
+## 3. eliminate redundant reads
+## output: sample_cor.rest
+contain  -f sample_cor
+
+## 4. run maximum matching, output up to 200 haplotypes
+## output: sample_cor.geno
+mm.py sample_cor.rest 200
+
+## 5. run EM
+## output: sample_cor.popl
+freqEst -f sample_cor
+
+
+
+DEC.PY:
+--------------------------------------------------
+Command line options: see SHORAH.PY below.
+
+
+Other options:
+	These parameters are controlled by the global variables declared at the beginning
+	of file dec.py. See the relative comments for an explanation.
+
+Output:
+	The program dec.py outputs several files. The most important is sample_cor.fas,
+	which contains the corrected reads and is passed by shorah (or by the user) to the
+	following step (fas2read). It also outputs a file ending in "proposed". It contains
+	the number of proposed new clusters per step in each window.
+	In order to make the analysis of these data easier, a gp (gnuplot) file is
+	produced. It is enough to load this file from gnuplot to produce a graph.
+	In order to have reliable estimates, the number of proposed per step should
+	be somewhat in the order of 0.1
+
+
+File formats:
+--------------------------------------------------
+
+A. reads are stored in two formats:
+
+  1. multi-fasta read files look like
+  
+    >READ_ID_NUMBER START_POS $ QUALITY_SCORES
+    SEQUENCE
+    
+    for example:
+    >READ_1  20 $ 10 15 20 25
+    ACGT
+    
+    the quality scores and dollar sign are optional
+    
+  2. read files look like
+    START_POS SEQUENCE
+    
+    for example
+    20 ACGT
+    
+    Start positions are indexed beginning at 0.
+
+  3. SFF files files used in the 454 pipeline
+      (see http://www.ncbi.nlm.nih.gov/projects/geo/info/seq.html)
+
+B. populations are stored in a multi-fasta format
+
+  >HAPLOTYPE_NAME * FREQUENCY
+  HAPLOTYPE_SEQUENCE
+
+  e.g.,
+  >H1 * 0.24
+  AACTGTAGCGTACTGACTGACTG
+
+
+C. lists of haplotypes are stored in a text file, one per line
+

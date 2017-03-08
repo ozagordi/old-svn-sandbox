@@ -1,0 +1,48 @@
+
+
+
+diri_sampler, contain and freqEst
+-----------------
+Running make should be sufficient in many cases. In case
+the gsl library is not located in the standard location,
+you may have to edit the lines indicated in Makefile.
+
+step2far.py
+-----------------
+Install EMBOSS and place a link to the needle executable file in the
+working directory
+e.g.
+[user@host]$ ln -sv emboss_installation/EMBOSS-5.0.0/emboss/needle
+emboss_installation/EMBOSS-5.0.0/emboss/needle -> needle
+
+In alternative, edit the needle_exe variable in the code (step2far.py,
+after the import statements)
+
+REQUIREMENTS:
+--------------------------------------------------
+step2far.py
+	a python program that needs:
+		EMBOSS (available at http://emboss.sourceforge.net/)
+		other python libraries included (pythonllib, MyAlignIO)
+
+dec.py
+	a python program that needs:
+		BioPython (available at http://biopython.org)
+		diri_sampler (a C program included in the package)
+		other python libraries included (pythonllib, MyAlignIO)
+
+diri_sampler
+	a C program that needs:
+    	    	 gsl (available at http://www.gnu.org/software/gsl/)
+
+mm.py:
+	a python program that needs:
+	  	 Python version >= 2.4
+
+contain.cc and freqEst.cc:
+	two C++ programs that need:
+		STL libraries
+
+fas2read.pl:
+	a Perl script that needs:
+		included Perl modules (in perllib)
